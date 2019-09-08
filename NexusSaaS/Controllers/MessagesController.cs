@@ -2,45 +2,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NexusSaaS.Data;
+using NexusSaaS.Entity;
 using NexusSaaS.Models;
 
 namespace NexusSaaS.Controllers
 {
     public class MessagesController : Controller
     {
-        private readonly NexusSaaSDbContext _context;
+        private IRepository<MessageEntity> messageRepository;
+        private readonly IMapper _mapper;
 
-        public MessagesController(NexusSaaSDbContext context)
+        public MessagesController(IRepository<MessageEntity> messageRepository, IMapper mapper)
         {
-            _context = context;
+            this.messageRepository = messageRepository;
+            _mapper = mapper;
         }
 
         // GET: Messages
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Messages.ToListAsync());
+            var messages = messageRepository.List();
+            var messagesList = new List<MessageModel>();
+            foreach (var message in messages)
+            {
+                var model = _mapper.Map<MessageModel>(message);
+                messagesList.Add(model);
+            }
+            return View(messagesList);
         }
 
         // GET: Messages/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var message = await _context.Messages
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var message = messageRepository.GetById(id);
             if (message == null)
             {
                 return NotFound();
             }
 
-            return View(message);
+            var messageModel = _mapper.Map<MessageModel>(message);
+
+            return View(messageModel);
         }
 
         // GET: Messages/Create
@@ -54,33 +61,28 @@ namespace NexusSaaS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Email,Subject,Content")] MessageModel message)
+        public async Task<IActionResult> Create(MessageModel message)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(message);
-                await _context.SaveChangesAsync();
-                TempData["ProcessMessage"] = "Message Sent Successfully.";
-                return View("Views/Home/Contact.cshtml");
-
+                var messageEntity = _mapper.Map<MessageEntity>(message);
+                messageRepository.Save(messageEntity);
             }
             return View(message);
         }
 
         // GET: Messages/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var message = await _context.Messages.FindAsync(id);
+            var message = messageRepository.GetById(id);
             if (message == null)
             {
                 return NotFound();
             }
-            return View(message);
+
+            var messageModel = _mapper.Map<MessageModel>(message);
+            return View(messageModel);
         }
 
         // POST: Messages/Edit/5
@@ -88,7 +90,7 @@ namespace NexusSaaS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Email,Subject,Content")] MessageModel message)
+        public async Task<IActionResult> Edit(int id, MessageModel message)
         {
             if (id != message.Id)
             {
@@ -99,19 +101,11 @@ namespace NexusSaaS.Controllers
             {
                 try
                 {
-                    _context.Update(message);
-                    await _context.SaveChangesAsync();
+                    var messageEntity = _mapper.Map<MessageEntity>(message);
+                    messageRepository.Update(messageEntity);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MessageExists(message.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -119,15 +113,10 @@ namespace NexusSaaS.Controllers
         }
 
         // GET: Messages/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var message = await _context.Messages
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var message = _mapper.Map<MessageModel>(messageRepository.GetById(id));
             if (message == null)
             {
                 return NotFound();
@@ -141,15 +130,8 @@ namespace NexusSaaS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var message = await _context.Messages.FindAsync(id);
-            _context.Messages.Remove(message);
-            await _context.SaveChangesAsync();
+            messageRepository.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool MessageExists(int id)
-        {
-            return _context.Messages.Any(e => e.Id == id);
         }
     }
 }

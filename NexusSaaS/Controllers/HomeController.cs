@@ -1,23 +1,34 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using NexusSaaS.Data;
+using NexusSaaS.Entity;
 using NexusSaaS.Models;
 
 namespace NexusSaaS.Controllers
 {
     public class HomeController : Controller
     {
-        private IRepository<FeatureModel> featureRepository;
-        public HomeController(IRepository<FeatureModel> featureRepository)
+        private IRepository<FeatureEntity> featureRepository;
+        private readonly IMapper _mapper;
+
+        public HomeController(IRepository<FeatureEntity> featureRepository, IMapper mapper)
         {
             this.featureRepository = featureRepository;
+            _mapper = mapper;   
         }
 
         public IActionResult Index()
         {
             var features = featureRepository.List();
-            return View(features);
+            var featureList = new List<FeatureModel>();
+            foreach (var feature in features)
+            {
+                var model = _mapper.Map<FeatureModel>(feature);
+                featureList.Add(model);
+            }
+            return View(featureList);
         }
 
         public IActionResult About()

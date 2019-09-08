@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NexusSaaS.Models
+namespace NexusSaaS.Entity
 {
     [Table("features")]
-    public class FeatureM
+    public class FeatureEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

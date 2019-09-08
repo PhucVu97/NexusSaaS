@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NexusSaaS.Models
+namespace NexusSaaS.Entity
 {
     [Table("message")]
-    public class Message
+    public class MessageEntity
     {
         public int Id { get; set; }
 
