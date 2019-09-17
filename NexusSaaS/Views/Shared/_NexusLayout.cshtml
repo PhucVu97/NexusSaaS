@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="~/css/responsive.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/css/custom-style.css">
 </head>
 
 <body>
@@ -37,7 +38,7 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav justify-content-center">
-                            <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
+                            <li class="nav-item active"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="services.html">Services</a>
                             <li class="nav-item submenu dropdown">
@@ -56,8 +57,9 @@
                             </li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
                         </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="nav-item"><a href="#" class="tickets_btn">Free Trial</a></li>
+                        <ul class="nav navbar-nav navbar-right" style="display: flex; flex-direction: row;">
+                            <li class="nav-item" style="width: 30%;"><a class="tickets_btn" id="loadLoginPartialView" style="color: white;">Login</a></li>
+                            <li class="nav-item" style="width: 30%;"><a class="tickets_btn" id="loadRegisterPartialView" style="color: white;">Sign up</a></li>
                         </ul>
                     </div>
                 </div>
@@ -65,7 +67,8 @@
         </div>
     </header>
 
-    @RenderBody();
+    @RenderBody()
+    <div id="display_modal"></div>
 
     <footer class="footer_area p_120">
         <div class="container">
@@ -137,6 +140,9 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
     <script src="~/js/gmaps.min.js"></script>
     <script src="~/js/theme.js"></script>
+    <script src="~/js/custom-script.js"></script>
+
+    @RenderSection("Scripts", required: false);
 </body>
 </html>
 

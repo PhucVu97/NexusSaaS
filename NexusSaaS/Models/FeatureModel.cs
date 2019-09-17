@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NexusSaaS.Models
 {
     public class FeatureModel
     {
+
+        #region property theo entity
         public int Id { get; set; }
         [StringLength(50)]
         [Required]
@@ -19,6 +17,11 @@ namespace NexusSaaS.Models
         public string Description { get; set; }
         [Required]
         public string Content { get; set; }
+        public IFormFile Img { get; set; }
+        #endregion
+
+        #region property rieng cua model
         public string ImgUrl { get; set; }
+        #endregion
     }
 }

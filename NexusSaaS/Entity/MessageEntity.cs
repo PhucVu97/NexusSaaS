@@ -15,5 +15,6 @@ namespace NexusSaaS.Entity
         public string Email { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
+        public virtual UserEntity UserEntity { get; set; }
     }
 }

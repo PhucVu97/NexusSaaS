@@ -1,28 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using NexusSaaS.Data;
 using NexusSaaS.Models;
+using NexusSaaS.Repository.Interface;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace NexusSaaS.Controllers
 {
     public class FeaturesController : Controller
     {
-        private IRepository<FeatureModel> featureRepository;
+        #region DIs
+        private IFeatureRepository featureRepository;
+        private readonly IMapper _mapper;
 
-        public FeaturesController(IRepository<FeatureModel> featureRepository)
+        private IHostingEnvironment _hosting;
+
+        public FeaturesController(IFeatureRepository featureRepository, IMapper mapper, IHostingEnvironment hosting)
         {
             this.featureRepository = featureRepository;
+            _mapper = mapper;
+            _hosting = hosting;
         }
+        #endregion
 
+        #region methods CRUD
         // GET: Features
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(featureRepository.List());
+            var features = featureRepository.List();
+            return View(features);
         }
 
         // GET: Features/Details/5
@@ -52,8 +61,16 @@ namespace NexusSaaS.Controllers
         {
             if (ModelState.IsValid)
             {
+                string uploadImgName = "";
+                if (feature.Img != null)
+                {
+                    var uploadFolder = Path.Combine(_hosting.WebRootPath, "images");
+                    uploadImgName = Guid.NewGuid() + "_" + feature.Img.FileName;
+                    var uploadImgPath = Path.Combine(uploadFolder, uploadImgName);
+                    feature.Img.CopyTo(new FileStream(uploadImgPath, FileMode.Create));
+                }
+                feature.ImgUrl = uploadImgName;
                 featureRepository.Save(feature);
-                return RedirectToAction(nameof(Index));
             }
             return View(feature);
         }
@@ -66,7 +83,9 @@ namespace NexusSaaS.Controllers
             {
                 return NotFound();
             }
-            return View(feature);
+
+            var featureModel = _mapper.Map<FeatureModel>(feature);
+            return View(featureModel);
         }
 
         // POST: Features/Edit/5
@@ -85,6 +104,15 @@ namespace NexusSaaS.Controllers
             {
                 try
                 {
+                    string uploadImgName = "";
+                    if (feature.Img != null)
+                    {
+                        var uploadFolder = Path.Combine(_hosting.WebRootPath, "images");
+                        uploadImgName = Guid.NewGuid() + "_" + feature.Img.FileName;
+                        var uploadImgPath = Path.Combine(uploadFolder, uploadImgName);
+                        feature.Img.CopyTo(new FileStream(uploadImgPath, FileMode.Create));
+                    }
+                    feature.ImgUrl = uploadImgName;
                     featureRepository.Update(feature);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -98,12 +126,7 @@ namespace NexusSaaS.Controllers
         // GET: Features/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var feature = featureRepository.GetById(id);
+            var feature = _mapper.Map<FeatureModel>(featureRepository.GetById(id));
             if (feature == null)
             {
                 return NotFound();
@@ -121,4 +144,5 @@ namespace NexusSaaS.Controllers
             return RedirectToAction(nameof(Index));
         }
     }
+    #endregion
 }

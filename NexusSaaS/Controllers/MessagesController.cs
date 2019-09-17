@@ -1,28 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using NexusSaaS.Data;
 using NexusSaaS.Entity;
 using NexusSaaS.Models;
+using NexusSaaS.Repository;
+using NexusSaaS.Repository.Interface;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NexusSaaS.Controllers
 {
     public class MessagesController : Controller
     {
-        private IRepository<MessageEntity> messageRepository;
+        #region DIs
+        private IMessageRepository messageRepository;
+        private IUserRepository userRepository;
         private readonly IMapper _mapper;
 
-        public MessagesController(IRepository<MessageEntity> messageRepository, IMapper mapper)
+        public MessagesController(IMessageRepository messageRepository, IUserRepository userRepository, IMapper mapper)
         {
             this.messageRepository = messageRepository;
+            this.userRepository = userRepository;
             _mapper = mapper;
         }
+        #endregion
 
+        #region methods CRUD
         // GET: Messages
         public async Task<IActionResult> Index()
         {
@@ -53,6 +56,14 @@ namespace NexusSaaS.Controllers
         // GET: Messages/Create
         public IActionResult Create()
         {
+            var listUser = userRepository.List();
+            List<UserModel> userModels = new List<UserModel>();
+            foreach(var user in listUser)
+            {
+                var userModel = _mapper.Map<UserModel>(user);
+                userModels.Add(userModel);
+            }
+            ViewData["listUser"] = userModels;
             return View();
         }
 
@@ -65,10 +76,13 @@ namespace NexusSaaS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var messageEntity = _mapper.Map<MessageEntity>(message);
-                messageRepository.Save(messageEntity);
+                var userModel = userRepository.GetById(message.UserEntityId);
+                var userEntity = _mapper.Map<UserEntity>(userModel);
+                message.UserEntity = userEntity;
+                messageRepository.Save(message);
+                TempData["ProcessMessage"] = "Message sent successful";
             }
-            return View(message);
+            return RedirectToAction("Contact", "Home");
         }
 
         // GET: Messages/Edit/5
@@ -80,9 +94,7 @@ namespace NexusSaaS.Controllers
             {
                 return NotFound();
             }
-
-            var messageModel = _mapper.Map<MessageModel>(message);
-            return View(messageModel);
+            return View(message);
         }
 
         // POST: Messages/Edit/5
@@ -101,8 +113,7 @@ namespace NexusSaaS.Controllers
             {
                 try
                 {
-                    var messageEntity = _mapper.Map<MessageEntity>(message);
-                    messageRepository.Update(messageEntity);
+                    messageRepository.Update(message);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -134,4 +145,5 @@ namespace NexusSaaS.Controllers
             return RedirectToAction(nameof(Index));
         }
     }
+    #endregion
 }

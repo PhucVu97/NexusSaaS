@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NexusSaaS.Data;
 using NexusSaaS.Models;
+using NexusSaaS.Repository;
+using NexusSaaS.Repository.Interface;
 
 namespace NexusSaaS
 {
@@ -39,13 +37,19 @@ namespace NexusSaaS
                 mc.AddProfile(new MappingProfile());
             });
 
+
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
-
+            services.AddDbContext<NexusSaaSDbContext>(options =>
+                options
+                .UseSqlServer(Configuration.GetConnectionString("NexusSaaSSqlDb")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<NexusSaaSDbContext>();
-            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IFeatureRepository, FeatureRepository>();
+            services.AddTransient<IMessageRepository, MessageRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IRoleRepository, RoleRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

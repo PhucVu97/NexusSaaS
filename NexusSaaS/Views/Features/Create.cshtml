@@ -4,20 +4,11 @@
     Layout = "_Layout";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Create</title>
-</head>
-<body>
-
 <h4>Feature</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -40,10 +31,11 @@
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImgUrl" class="control-label"></label>
-                <input asp-for="ImgUrl" class="form-control" />
-                <span asp-validation-for="ImgUrl" class="text-danger"></span>
+                <label asp-for="Img" class="control-label"></label>
+                <input asp-for="Img" class="form-control" id="add_images" />
+                <span asp-validation-for="Img" class="text-danger"></span>
             </div>
+            <div class="preview_images hidden"></div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
@@ -55,5 +47,32 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-</body>
-</html>
+@section Scripts {
+    <script>
+        $(function () {
+            var imagesPreview = function (input, display_images) {
+                if (input.files) {
+                    var filesAmount = input.files.length;
+                    for (i = 0; i < filesAmount; i++) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $($.parseHTML('<img>')).attr('src', e.target.result).appendTo(display_images);
+                            $("img").addClass("preview_image");
+                            $("img").css({ "max-width": "400px", "margin" : "10px 0"});
+                        }
+                        reader.readAsDataURL(input.files[i]);
+                    }
+                }
+            };
+            $('#add_images').on('change', function () {
+                $('.preview_images img').remove();
+                $('.preview_images').removeClass("hidden");
+                imagesPreview(this, 'div.preview_images');
+            });
+            $(":reset").click(function () {
+                $(".preview_images").addClass('hidden');
+                $(".preview_image").remove();
+            });
+        });
+    </script>
+}
