@@ -11,7 +11,7 @@ namespace NexusSaaS.Models
         public int RoleId { get; set; }
         public string Name { get; set; }
         public RoleStatus Status { get; set; }
-        public virtual List<RoleUser> RoleUsers { get; set; }
+        public List<RoleUser> RoleUsers { get; set; }
 
 
         public int UserCount { get; set; }

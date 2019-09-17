@@ -6,20 +6,20 @@
 
 <div id="id01" class="modal">
 
-    <form class="modal-content animate" action="/action_page.php">
+    <form class="modal-content animate" asp-action="Create" asp-controller="Users">
 
         <div class="container">
-            <label for="uname"><b>Name</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required>
+            <label asp-for="Name"><b>Name</b></label>
+            <input type="text" placeholder="Enter Username" asp-for="Name" required>
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+            <label asp-for="Password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" asp-for="Password" required>
 
-            <label for="psw"><b>Email</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+            <label asp-for="Email"><b>Email</b></label>
+            <input type="text" placeholder="Enter Email" asp-for="Email" required>
 
-            <label for="psw"><b>Phone</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+            <label asp-for="Phone"><b>Phone</b></label>
+            <input type="text" placeholder="Enter Phone" asp-for="Phone" required>
 
             <label for="psw"><b>Roles</b></label>
             @foreach (var r in listRoles)
@@ -30,7 +30,7 @@
             <button type="submit">Sign Up</button>
         </div>
 
-        <div class="container" style="background-color:#f1f1f1">
+        <div class="container">
             <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
         </div>
     </form>

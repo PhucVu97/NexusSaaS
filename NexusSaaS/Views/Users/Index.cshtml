@@ -25,6 +25,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.MessagesCount)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RolesCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoleUsers.First().Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -44,9 +53,23 @@
                 @Html.DisplayFor(modelItem => item.MessagesCount)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.RolesCount)
+            </td>
+            <td>
+                <ul>
+                    @foreach (var r in item.RoleUsers)
+                    {
+                        <li> @r.Role.Name </li>
+                    }
+                </ul>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
             </td>
         </tr>
 }

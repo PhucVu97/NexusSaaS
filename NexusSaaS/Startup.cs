@@ -10,6 +10,7 @@ using NexusSaaS.Data;
 using NexusSaaS.Models;
 using NexusSaaS.Repository;
 using NexusSaaS.Repository.Interface;
+using NexusSaaS.Ultil;
 
 namespace NexusSaaS
 {
@@ -50,6 +51,8 @@ namespace NexusSaaS
             services.AddTransient<IMessageRepository, MessageRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
+            services.AddTransient<IRoleUser, RoleUserRepository>();
+            services.AddTransient<StringUltil, StringUltil>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

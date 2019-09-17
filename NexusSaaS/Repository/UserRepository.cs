@@ -4,6 +4,7 @@ using NexusSaaS.Data;
 using NexusSaaS.Entity;
 using NexusSaaS.Models;
 using NexusSaaS.Repository.Interface;
+using NexusSaaS.Ultil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +15,21 @@ namespace NexusSaaS.Repository
     {
         private readonly NexusSaaSDbContext _context;
         private readonly IMapper _mapper;
+        private readonly StringUltil _stringUltil;
 
-        public UserRepository(NexusSaaSDbContext context, IMapper mapper)
+        public UserRepository(NexusSaaSDbContext context, IMapper mapper, StringUltil stringUltil)
         {
             _context = context;
             _mapper = mapper;
+            _stringUltil = stringUltil;
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(string id)
+        public void Delete(int id)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -47,16 +50,16 @@ namespace NexusSaaS.Repository
             }
         }
 
-        public UserModel GetById(int id)
+        public UserModel GetById(string id)
         {
             throw new NotImplementedException();
         }
 
-        public UserModel GetById(string id)
+        public UserModel GetById(int id)
         {
             var obj = _context.Users
                 .ProjectTo<UserModel>(_mapper.ConfigurationProvider)
-                .FirstOrDefault(u => u.Id == id);
+                .FirstOrDefault(u => u.UserId == id);
 
             if (obj != null)
             {
@@ -83,7 +86,8 @@ namespace NexusSaaS.Repository
             if (objModel != null)
             {
                 var objEntity = _mapper.Map<UserEntity>(objModel);
-                _context.Users.Add(objEntity);
+                objEntity.Password = _stringUltil.EncryptPassword(objEntity.Password, objEntity.Salt);
+                _context.Add(objEntity);
                 _context.SaveChanges();
             }
         }

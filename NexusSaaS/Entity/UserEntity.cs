@@ -6,12 +6,10 @@ using System.Security.Cryptography;
 
 namespace NexusSaaS.Entity
 {
-    [Table("users")]
     public class UserEntity
     {
         public UserEntity()
         {
-            this.Id = Guid.NewGuid().ToString();
             this.CreatedAt = DateTime.Today;
             this.UpdatedAt = DateTime.Today;
             this.Status = AccountStatus.Active;
@@ -23,7 +21,7 @@ namespace NexusSaaS.Entity
         }
 
         [Key]
-        public string Id { get; set; }
+        public int UserId { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
@@ -33,8 +31,8 @@ namespace NexusSaaS.Entity
         public DateTime UpdatedAt { get; set; }
         public AccountStatus Status { get; set; }
 
-        public virtual List<MessageEntity> MessageEntitys { get; set; }
-        public virtual List<RoleUser> RoleUsers { get; set; }
+        public List<MessageEntity> MessageEntitys { get; set; }
+        public List<RoleUser> RoleUsers { get; set; }
     }
 
     public enum AccountStatus

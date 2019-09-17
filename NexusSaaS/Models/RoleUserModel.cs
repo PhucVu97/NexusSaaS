@@ -1,15 +1,13 @@
-﻿using System;
+﻿using NexusSaaS.Entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace NexusSaaS.Entity
+namespace NexusSaaS.Models
 {
-    public class RoleUser
+    public class RoleUserModel
     {
-        public RoleUser()
-        {
-            this.Status = RoleUserStatus.Active;
-            this.GrantDate = DateTime.Now;
-        }
-
         public int UserId { get; set; }
         public int RoleId { get; set; }
         public UserEntity UserEntity { get; set; }

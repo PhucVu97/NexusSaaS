@@ -25,7 +25,17 @@ namespace NexusSaaS.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RoleUser>()
-                .HasKey(ra => new { ra.RoleId, ra.UserId });
+                .HasKey(ru => new { ru.UserId, ru.RoleId });
+
+            //modelBuilder.Entity<UserEntity>()
+            //                .HasMany(u => u.RoleUsers)
+            //                .WithOne(u => u.UserEntity).IsRequired()
+            //                .HasForeignKey(u => u.UserEntity);
+
+            //modelBuilder.Entity<Role>()
+            //            .HasMany(r => r.RoleUsers)
+            //            .WithOne(r => r.Role).IsRequired()
+            //            .HasForeignKey(r => r.RoleId);
         }
 
 

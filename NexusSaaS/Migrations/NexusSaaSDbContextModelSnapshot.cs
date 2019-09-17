@@ -15,7 +15,7 @@ namespace NexusSaaS.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -76,11 +76,11 @@ namespace NexusSaaS.Migrations
 
                     b.Property<string>("Subject");
 
-                    b.Property<string>("UserEntityId");
+                    b.Property<int?>("UserEntityUserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserEntityId");
+                    b.HasIndex("UserEntityUserId");
 
                     b.ToTable("message");
                 });
@@ -102,27 +102,26 @@ namespace NexusSaaS.Migrations
 
             modelBuilder.Entity("NexusSaaS.Entity.RoleUser", b =>
                 {
-                    b.Property<int>("RoleId");
-
                     b.Property<int>("UserId");
+
+                    b.Property<int>("RoleId");
 
                     b.Property<DateTime>("GrantDate");
 
                     b.Property<int>("Status");
 
-                    b.Property<string>("UserId1");
+                    b.HasKey("UserId", "RoleId");
 
-                    b.HasKey("RoleId", "UserId");
-
-                    b.HasIndex("UserId1");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("RoleUsers");
                 });
 
             modelBuilder.Entity("NexusSaaS.Entity.UserEntity", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedAt");
 
@@ -140,28 +139,29 @@ namespace NexusSaaS.Migrations
 
                     b.Property<DateTime>("UpdatedAt");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
-                    b.ToTable("users");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("NexusSaaS.Entity.MessageEntity", b =>
                 {
                     b.HasOne("NexusSaaS.Entity.UserEntity", "UserEntity")
                         .WithMany("MessageEntitys")
-                        .HasForeignKey("UserEntityId");
+                        .HasForeignKey("UserEntityUserId");
                 });
 
             modelBuilder.Entity("NexusSaaS.Entity.RoleUser", b =>
                 {
                     b.HasOne("NexusSaaS.Entity.Role", "Role")
-                        .WithMany()
+                        .WithMany("RoleUsers")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("NexusSaaS.Entity.UserEntity", "User")
+                    b.HasOne("NexusSaaS.Entity.UserEntity", "UserEntity")
                         .WithMany("RoleUsers")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

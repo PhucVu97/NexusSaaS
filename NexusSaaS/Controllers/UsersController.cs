@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NexusSaaS.Entity;
 using NexusSaaS.Models;
 using NexusSaaS.Repository.Interface;
 using System.Threading.Tasks;
@@ -12,13 +13,15 @@ namespace NexusSaaS.Controllers
         #region DIs
         private IUserRepository userRepository;
         private IRoleRepository roleRepository;
+        private IRoleUser roleUserRepository;
         private readonly IMapper _mapper;
 
 
-        public UsersController(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper)
+        public UsersController(IUserRepository userRepository, IRoleRepository roleRepository, IRoleUser roleUserRepository, IMapper mapper)
         {
             this.userRepository = userRepository;
             this.roleRepository = roleRepository;
+            this.roleUserRepository = roleUserRepository;
             _mapper = mapper;
         }
         #endregion
@@ -56,11 +59,21 @@ namespace NexusSaaS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(UserModel user)
+        public IActionResult Create(UserModel user, int[] roleIds)
         {
             if (ModelState.IsValid)
             {
-                userRepository.Save(user);
+                foreach (var id in roleIds)
+                {
+                    userRepository.Save(user);
+                    var role = roleRepository.GetById(id);
+                    RoleUserModel roleUser = new RoleUserModel
+                    {
+                        Role = _mapper.Map<Role>(role),
+                        UserEntity = _mapper.Map<UserEntity>(user),
+                    };
+                    roleUserRepository.Save(roleUser);       
+                }
             }
             return View(user);
         }
