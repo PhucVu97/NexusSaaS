@@ -50,6 +50,19 @@ namespace NexusSaaS.Repository
             }
         }
 
+        public UserModel GetByEmail(string email)
+        {
+            var obj = _context.Users
+                .ProjectTo<UserModel>(_mapper.ConfigurationProvider)
+                .FirstOrDefault(u => u.Email == email);
+
+            if (obj != null)
+            {
+                return obj;
+            }
+            return null;
+        }
+
         public UserModel GetById(string id)
         {
             throw new NotImplementedException();
@@ -87,6 +100,19 @@ namespace NexusSaaS.Repository
             {
                 var objEntity = _mapper.Map<UserEntity>(objModel);
                 objEntity.Password = _stringUltil.EncryptPassword(objEntity.Password, objEntity.Salt);
+                foreach (var roleId in objModel.RoleIds)
+                {
+                    var role = _context.Roles.Find(roleId);
+                    if (role != null)
+                    {
+                        RoleUser roleUser = new RoleUser
+                        {
+                            Role = role,
+                            UserEntity = objEntity
+                        };
+                        _context.Add(roleUser);
+                    }
+                }
                 _context.Add(objEntity);
                 _context.SaveChanges();
             }

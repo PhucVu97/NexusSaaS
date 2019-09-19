@@ -6,7 +6,7 @@
 
 <div id="id01" class="modal">
 
-    <form class="modal-content animate" asp-action="Create" asp-controller="Users">
+    <form class="modal-content animate" asp-action="Create" asp-controller="Register">
 
         <div class="container">
             <label asp-for="Name"><b>Name</b></label>
@@ -24,7 +24,7 @@
             <label for="psw"><b>Roles</b></label>
             @foreach (var r in listRoles)
             {
-                <label class="radio-inline"><input type="checkbox" name="roleIds[]" value="@r.RoleId"> @r.Name </label>
+                <label class="radio-inline"><input type="checkbox" name="RoleIds" value="@r.RoleId"> @r.Name </label>
             }
 
             <button type="submit">Sign Up</button>

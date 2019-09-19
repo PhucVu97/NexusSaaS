@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace NexusSaaS.Models
 {
+
     public class RoleModel
     {
         public int RoleId { get; set; }
         public string Name { get; set; }
         public RoleStatus Status { get; set; }
         public List<RoleUser> RoleUsers { get; set; }
-
-
         public int UserCount { get; set; }
     }
 

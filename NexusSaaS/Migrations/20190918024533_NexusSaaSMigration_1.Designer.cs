@@ -10,14 +10,14 @@ using NexusSaaS.Data;
 namespace NexusSaaS.Migrations
 {
     [DbContext(typeof(NexusSaaSDbContext))]
-    [Migration("20190917181250_NexusSaaSMigration")]
-    partial class NexusSaaSMigration
+    [Migration("20190918024533_NexusSaaSMigration_1")]
+    partial class NexusSaaSMigration_1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 

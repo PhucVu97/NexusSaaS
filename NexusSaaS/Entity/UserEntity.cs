@@ -8,17 +8,6 @@ namespace NexusSaaS.Entity
 {
     public class UserEntity
     {
-        public UserEntity()
-        {
-            this.CreatedAt = DateTime.Today;
-            this.UpdatedAt = DateTime.Today;
-            this.Status = AccountStatus.Active;
-            this.Salt = new byte[128 / 8];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(this.Salt);
-            }
-        }
 
         [Key]
         public int UserId { get; set; }

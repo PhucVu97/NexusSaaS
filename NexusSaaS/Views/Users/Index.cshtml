@@ -29,7 +29,7 @@
                 @Html.DisplayNameFor(model => model.RolesCount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoleUsers.First().Role)
+                @Html.DisplayNameFor(model => model.RoleNames)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -57,9 +57,9 @@
             </td>
             <td>
                 <ul>
-                    @foreach (var r in item.RoleUsers)
+                    @foreach (var roleName in item.RoleNames)
                     {
-                        <li> @r.Role.Name </li>
+                        <li> @roleName </li>
                     }
                 </ul>
             </td>

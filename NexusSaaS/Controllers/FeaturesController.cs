@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace NexusSaaS.Controllers
 {
+    [Route("admin/[controller]/[action]")]
     public class FeaturesController : Controller
     {
         #region DIs

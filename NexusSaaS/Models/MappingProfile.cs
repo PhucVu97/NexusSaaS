@@ -14,7 +14,8 @@ namespace NexusSaaS.Models
             CreateMap<UserEntity, UserModel>()
                 .ForMember(um => um.MessagesCount, opt => opt.MapFrom(u => u.MessageEntitys.Count()))
                 .ForMember(um => um.RolesCount, opt => opt.MapFrom(u => u.RoleUsers.Where(ru => ru.UserId == u.UserId).Count()))
-                .ForMember(um => um.Status, opt => opt.MapFrom(u => (AccountStatus)u.Status));
+                .ForMember(um => um.Status, opt => opt.MapFrom(u => (AccountStatus)u.Status))
+                .ForMember(um => um.RoleNames, opt => opt.MapFrom(u => u.RoleUsers.Select(ru => ru.Role.Name).ToList()));
             CreateMap<Role, RoleModel>()
                 .ForMember(rm => rm.Status, opt => opt.MapFrom(r => (RoleStatus)r.Status));
             CreateMap<RoleUser, RoleUserModel>();

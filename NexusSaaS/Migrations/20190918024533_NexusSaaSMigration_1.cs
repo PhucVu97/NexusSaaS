@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace NexusSaaS.Migrations
 {
-    public partial class NexusSaaSMigration : Migration
+    public partial class NexusSaaSMigration_1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

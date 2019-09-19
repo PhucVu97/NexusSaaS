@@ -9,5 +9,6 @@ namespace NexusSaaS.Repository.Interface
 {
     public interface IUserRepository : IGenericRepository<UserEntity, UserModel>
     {
+        UserModel GetByEmail(string email);
     }
 }

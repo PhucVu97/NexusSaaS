@@ -1,13 +1,15 @@
-﻿<div id="id01" class="modal">
+﻿@model NexusSaaS.Models.UserModel
 
-    <form class="modal-content animate" action="/action_page.php">
+<div id="id01" class="modal">
+
+    <form class="modal-content animate" asp-controller="Login" asp-action="Login">
 
         <div class="container">
-            <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required>
+            <label asp-for="Email"><b>Username</b></label>
+            <input type="text" placeholder="Enter Email" asp-for="Email" required>
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+            <label asp-for="Password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" asp-for="Password" required>
 
             <button type="submit">Login</button>
             <label>

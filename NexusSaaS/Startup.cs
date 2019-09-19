@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NexusSaaS.Data;
+using NexusSaaS.MiddleWare;
 using NexusSaaS.Models;
 using NexusSaaS.Repository;
 using NexusSaaS.Repository.Interface;
 using NexusSaaS.Ultil;
+using System;
 
 namespace NexusSaaS
 {
@@ -45,14 +47,19 @@ namespace NexusSaaS
             services.AddDbContext<NexusSaaSDbContext>(options =>
                 options
                 .UseSqlServer(Configuration.GetConnectionString("NexusSaaSSqlDb")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddDistributedMemoryCache();
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromDays(30); 
+            });
             services.AddDbContext<NexusSaaSDbContext>();
             services.AddTransient<IFeatureRepository, FeatureRepository>();
             services.AddTransient<IMessageRepository, MessageRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
-            services.AddTransient<IRoleUser, RoleUserRepository>();
+            services.AddTransient<ILoginRepository, LoginRepository>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<StringUltil, StringUltil>();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +78,12 @@ namespace NexusSaaS
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
+            app.MapWhen(
+                context => context.Request.Path.StartsWithSegments("/admin"), appBuilder =>
+            {
+                appBuilder.UseMiddleware<CheckAuthenticationMiddleWare>();
+            });
 
             app.UseMvc(routes =>
             {
