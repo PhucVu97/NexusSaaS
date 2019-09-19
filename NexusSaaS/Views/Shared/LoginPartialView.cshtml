@@ -7,9 +7,11 @@
         <div class="container">
             <label asp-for="Email"><b>Username</b></label>
             <input type="text" placeholder="Enter Email" asp-for="Email" required>
+            <span asp-validation-for="Email" class="text-danger"></span>
 
             <label asp-for="Password"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" asp-for="Password" required>
+            <span asp-validation-for="Password" class="text-danger"></span>
 
             <button type="submit">Login</button>
             <label>

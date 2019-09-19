@@ -11,21 +11,26 @@
         <div class="container">
             <label asp-for="Name"><b>Name</b></label>
             <input type="text" placeholder="Enter Username" asp-for="Name" required>
+            <span asp-validation-for="Name" class="text-danger"></span>
 
             <label asp-for="Password"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" asp-for="Password" required>
+            <span asp-validation-for="Password" class="text-danger"></span>
 
             <label asp-for="Email"><b>Email</b></label>
             <input type="text" placeholder="Enter Email" asp-for="Email" required>
+            <span asp-validation-for="Email" class="text-danger"></span>
 
             <label asp-for="Phone"><b>Phone</b></label>
             <input type="text" placeholder="Enter Phone" asp-for="Phone" required>
+            <span asp-validation-for="Phone" class="text-danger"></span>
 
             <label for="psw"><b>Roles</b></label>
             @foreach (var r in listRoles)
             {
                 <label class="radio-inline"><input type="checkbox" name="RoleIds" value="@r.RoleId"> @r.Name </label>
             }
+            <span asp-validation-for="RoleIds" class="text-danger"></span>
 
             <button type="submit">Sign Up</button>
         </div>

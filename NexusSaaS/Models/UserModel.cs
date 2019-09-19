@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace NexusSaaS.Models
 {
@@ -20,10 +22,14 @@ namespace NexusSaaS.Models
         }
 
         public int UserId { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Phone { get; set; }
+        [Required]
         public string Email { get; set; }
         public byte[] Salt { get; set; }
+        [Required]
         public string Password { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
@@ -31,6 +37,7 @@ namespace NexusSaaS.Models
         public List<MessageEntity> MessageEntitys { get; set; }
         public List<RoleUser> RoleUsers { get; set; }
 
+        [Required(ErrorMessage = "Please select at least role")]
         public int[] RoleIds { get; set; }
         public List<string> RoleNames { get; set; }
         public int MessagesCount { get; set; }

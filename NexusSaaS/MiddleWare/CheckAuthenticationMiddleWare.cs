@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using NexusSaaS.Models;
 using System;
@@ -11,6 +12,7 @@ namespace NexusSaaS.MiddleWare
 {
     public class CheckAuthenticationMiddleWare
     {
+
         private readonly RequestDelegate _next;
 
         public CheckAuthenticationMiddleWare(RequestDelegate next)

@@ -33,9 +33,11 @@ namespace NexusSaaS.Controllers
                 if (ModelState.IsValid)
                 {
                     userRepository.Save(user);
+                    TempData["registerStatus"] = "Sign up successfull";
+                    return RedirectToAction("Index", "Home");
                 }
             }
-            return View(user);
+            return NotFound();
         }
     }
 }

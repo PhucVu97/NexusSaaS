@@ -165,7 +165,7 @@
                 @for (var i = 0; i < Model.Count(); i++)
                 {
                     var imgUrl = "/images/";
-                    if(Model[i].ImgUrl == null || Model[i].ImgUrl == "")
+                    if (Model[i].ImgUrl == null || Model[i].ImgUrl == "")
                     {
                         imgUrl += "noImg.png";
                     }
@@ -489,3 +489,10 @@
         </div>
     </div>
 </section>
+
+@if (TempData["registerStatus"] != null)
+{
+    <script>
+            alert("@TempData["registerStatus"]");
+    </script>
+}

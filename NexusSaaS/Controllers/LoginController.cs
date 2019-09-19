@@ -7,11 +7,11 @@ namespace NexusSaaS.Controllers
 {
     public class LoginController : Controller
     {
-        private ILoginRepository loginRepository;
+        private IUserRepository userRepository;
 
-        public LoginController(ILoginRepository loginRepository)
+        public LoginController(IUserRepository userRepository)
         {
-            this.loginRepository = loginRepository;
+            this.userRepository = userRepository;
         }
         public IActionResult LoadLoginPartialView()
         {
@@ -20,14 +20,22 @@ namespace NexusSaaS.Controllers
 
         public IActionResult Login(UserModel user)
         {
-            if(user != null)
+            if (user != null)
             {
-                if (ModelState.IsValid)
+
+                var statusCode = userRepository.Login(user);
+                if (statusCode == System.Net.HttpStatusCode.Accepted)
                 {
-                    loginRepository.Login(user);
                     return RedirectToAction("Index", "Home");
                 }
-                return View();
+                else if (statusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["loginStatus"] = "Wrong password";
+                }
+                else if (statusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    TempData["loginStatus"] = "Account doesn't exist";
+                }
             }
             return NotFound();
         }

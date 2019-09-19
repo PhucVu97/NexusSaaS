@@ -1,4 +1,9 @@
-﻿<!doctype html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json;
+
+
+<!doctype html>
 <html lang="en">
 <head>
     <!-- Required meta tags -->
@@ -60,6 +65,7 @@
                         <ul class="nav navbar-nav navbar-right" style="display: flex; flex-direction: row;">
                             <li class="nav-item" style="width: 30%;"><a class="tickets_btn" id="loadLoginPartialView" style="color: white;">Login</a></li>
                             <li class="nav-item" style="width: 30%;"><a class="tickets_btn" id="loadRegisterPartialView" style="color: white;">Sign up</a></li>
+                            <li><h3 style="color: white" id="loggedInUser"></h3></li>
                         </ul>
                     </div>
                 </div>
@@ -143,6 +149,14 @@
     <script src="~/js/custom-script.js"></script>
 
     @RenderSection("Scripts", required: false);
+    @if (HttpContextAccessor.HttpContext.Session.GetString("loggedInUser") != null)
+    {
+        var loggedInUser = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Session.GetString("loggedInUser"));
+        <script>
+            $(".tickets_btn").css("display", "none");
+            $("#loggedInUser").text("Welcome" + " " + "@loggedInUser.Name");
+        </script>
+    }
 </body>
 </html>
 

@@ -31,7 +31,7 @@ namespace NexusSaaS
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -48,8 +48,9 @@ namespace NexusSaaS
                 options
                 .UseSqlServer(Configuration.GetConnectionString("NexusSaaSSqlDb")));
             services.AddDistributedMemoryCache();
-            services.AddSession(options => {
-                options.IdleTimeout = TimeSpan.FromDays(30); 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(30);
             });
             services.AddDbContext<NexusSaaSDbContext>();
             services.AddTransient<IFeatureRepository, FeatureRepository>();
@@ -79,7 +80,7 @@ namespace NexusSaaS
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
-            app.MapWhen(
+            app.UseWhen(
                 context => context.Request.Path.StartsWithSegments("/admin"), appBuilder =>
             {
                 appBuilder.UseMiddleware<CheckAuthenticationMiddleWare>();
@@ -90,6 +91,12 @@ namespace NexusSaaS
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "admin",
+                    template: "admin/{controller}/{action}/{id?}",
+                    defaults: new { controller = "Users", action = "Index" }
+                );
             });
         }
     }

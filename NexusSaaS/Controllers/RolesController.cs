@@ -6,7 +6,6 @@ using NexusSaaS.Repository.Interface;
 
 namespace NexusSaaS.Controllers
 {
-    [Route("admin/[controller]/[action]")]
     public class RolesController : Controller
     {
         private IRoleRepository roleRepository;

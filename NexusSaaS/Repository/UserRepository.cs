@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using NexusSaaS.Data;
 using NexusSaaS.Entity;
 using NexusSaaS.Models;
@@ -8,6 +10,7 @@ using NexusSaaS.Ultil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace NexusSaaS.Repository
 {
@@ -16,12 +19,15 @@ namespace NexusSaaS.Repository
         private readonly NexusSaaSDbContext _context;
         private readonly IMapper _mapper;
         private readonly StringUltil _stringUltil;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private ISession _session => _httpContextAccessor.HttpContext.Session;
 
-        public UserRepository(NexusSaaSDbContext context, IMapper mapper, StringUltil stringUltil)
+        public UserRepository(NexusSaaSDbContext context, IMapper mapper, StringUltil stringUltil, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
             _stringUltil = stringUltil;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public void Delete(string id)
@@ -137,6 +143,29 @@ namespace NexusSaaS.Repository
                     transaction.Rollback();
                 }
             }
+        }
+
+        public HttpStatusCode Login(UserModel user)
+        {
+            var existUser = _context.Users
+               .Where(a => a.Status != Entity.AccountStatus.Deactive)
+               .ProjectTo<UserModel>(_mapper.ConfigurationProvider)
+               .SingleOrDefault(u => u.Email == user.Email);
+
+            if (existUser != null)
+            {
+                user.Password = _stringUltil.EncryptPassword(user.Password, existUser.Salt);
+                if (existUser.Password == user.Password && existUser.Status == Models.AccountStatus.Active)
+                {
+                    _session.SetString("loggedInUser", JsonConvert.SerializeObject(_mapper.Map<UserModel>(existUser)));
+                    return HttpStatusCode.Accepted;
+                }
+                else
+                {
+                    return HttpStatusCode.Unauthorized;
+                }
+            }
+            return  HttpStatusCode.NoContent;
         }
     }
 }
