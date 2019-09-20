@@ -1,8 +1,8 @@
-﻿@model NexusSaaS.Models.UserModel
+﻿@model NexusSaaS.Models.LoginViewModel
 
 <div id="id01" class="modal">
 
-    <form class="modal-content animate" asp-controller="Login" asp-action="Login">
+    <form class="modal-content animate" asp-controller="Login" asp-action="Login" style="width: 30%;">
 
         <div class="container">
             <label asp-for="Email"><b>Username</b></label>
@@ -15,7 +15,7 @@
 
             <button type="submit">Login</button>
             <label>
-                <input type="checkbox" checked="checked" name="remember"> Remember me
+                <input type="checkbox" name="RememberMe" value="1"> Remember me
             </label>
         </div>
 

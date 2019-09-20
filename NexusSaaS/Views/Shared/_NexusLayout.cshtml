@@ -63,9 +63,10 @@
                             <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right" style="display: flex; flex-direction: row;">
-                            <li class="nav-item" style="width: 30%;"><a class="tickets_btn" id="loadLoginPartialView" style="color: white;">Login</a></li>
-                            <li class="nav-item" style="width: 30%;"><a class="tickets_btn" id="loadRegisterPartialView" style="color: white;">Sign up</a></li>
-                            <li><h3 style="color: white" id="loggedInUser"></h3></li>
+                            <li class="nav-item" style="width: 50%; margin: 0"><a class="tickets_btn" id="loadLoginPartialView" style="color: white;">Login</a></li>
+                            <li class="nav-item" style="width: 50%; margin: 0"><a class="tickets_btn" id="loadRegisterPartialView" style="color: white;">Sign up</a></li>
+                            <li style="width: 50%;"><a class="tickets_btn" id="loggedInUser" style="color: white; display: none;"></a></li>
+                            <li style="width: 50%;"><a asp-controller="Login" asp-action="Logout" class="tickets_btn" style="color: white; display: none;" id="signOut">Sign out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -154,9 +155,22 @@
         var loggedInUser = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Session.GetString("loggedInUser"));
         <script>
             $(".tickets_btn").css("display", "none");
+            $("#signOut").css("display", "block");
+            $("#loggedInUser").text("Welcome" + " " + "@loggedInUser.Name");
+        </script>
+    }
+    else if (HttpContextAccessor.HttpContext.Request.Cookies["loggedInUser"] != null)
+    {
+        var loggedInUser = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Request.Cookies["loggedInUser"]);
+        <script>
+            $(".tickets_btn").css("display", "none");
+            $("#signOut").css("display", "block");
+            $("#loggedInUser").css("display", "block");
             $("#loggedInUser").text("Welcome" + " " + "@loggedInUser.Name");
         </script>
     }
 </body>
+
+
 </html>
 

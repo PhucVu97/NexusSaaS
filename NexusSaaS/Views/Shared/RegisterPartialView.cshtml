@@ -6,7 +6,7 @@
 
 <div id="id01" class="modal">
 
-    <form class="modal-content animate" asp-action="Create" asp-controller="Register">
+    <form class="modal-content animate" asp-action="Create" asp-controller="Register" style="width: 30%;">
 
         <div class="container">
             <label asp-for="Name"><b>Name</b></label>
@@ -20,6 +20,10 @@
             <label asp-for="Email"><b>Email</b></label>
             <input type="text" placeholder="Enter Email" asp-for="Email" required>
             <span asp-validation-for="Email" class="text-danger"></span>
+            @if (ViewData.ModelState.ContainsKey("Existed"))
+            {
+                <span class="text-danger">@ViewData.ModelState["Existed"]</span>
+            }
 
             <label asp-for="Phone"><b>Phone</b></label>
             <input type="text" placeholder="Enter Phone" asp-for="Phone" required>

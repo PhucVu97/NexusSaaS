@@ -57,7 +57,6 @@ namespace NexusSaaS
             services.AddTransient<IMessageRepository, MessageRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
-            services.AddTransient<ILoginRepository, LoginRepository>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<StringUltil, StringUltil>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

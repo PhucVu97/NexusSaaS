@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 
 namespace NexusSaaS.Repository.Interface
 {
@@ -11,10 +12,10 @@ namespace NexusSaaS.Repository.Interface
         where TModel : class
     {
         IEnumerable<TModel> List();
-        void Save(TModel objModel);
-        void Update(TModel objModel);
-        void Delete(int id);
-        void Delete(string id);
+        HttpStatusCode Save(TModel objModel);
+        HttpStatusCode Update(TModel objModel);
+        HttpStatusCode Delete(int id);
+        HttpStatusCode Delete(string id);
         TModel GetById(int id);
         TModel GetById(string id);
     }

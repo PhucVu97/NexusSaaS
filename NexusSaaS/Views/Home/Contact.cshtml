@@ -1,4 +1,7 @@
 ﻿@model NexusSaaS.Models.MessageModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json;
 
 @{
     ViewData["Title"] = "Contact";
@@ -86,6 +89,19 @@
     {
         <script>
             alert("@TempData["ProcessMessage"]");
+        </script>
+    }
+
+    @if(HttpContextAccessor.HttpContext.Session.GetString("loggedInUser") != null)
+    {
+        var name = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Session.GetString("loggedInUser")).Name;
+        var email = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Session.GetString("loggedInUser")).Email;
+
+        <script>
+            $("#name").val("@name");
+            $("#email").val("@email");
+            $("#name").prop('disabled', true);
+            $("#email").prop('disabled', true);
         </script>
     }
 </section>

@@ -7,6 +7,7 @@ using NexusSaaS.Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace NexusSaaS.Repository
 {
@@ -21,7 +22,7 @@ namespace NexusSaaS.Repository
             _mapper = mapper;
         }
 
-        public void Delete(int id)
+        public HttpStatusCode Delete(int id)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -33,16 +34,19 @@ namespace NexusSaaS.Repository
                         _context.Remove(obj);
                         _context.SaveChanges();
                         transaction.Commit();
+                        return HttpStatusCode.OK;
                     }
+                    return HttpStatusCode.NotFound;
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
+                    return HttpStatusCode.InternalServerError;
                 }
             }
         }
 
-        public void Delete(string id)
+        public HttpStatusCode Delete(string id)
         {
             throw new NotImplementedException();
         }
@@ -78,17 +82,26 @@ namespace NexusSaaS.Repository
             return null;
         }
 
-        public void Save(RoleModel objModel)
+        public HttpStatusCode Save(RoleModel objModel)
         {
             if (objModel != null)
             {
-                var objEntity = _mapper.Map<Role>(objModel);
-                _context.Roles.Add(objEntity);
-                _context.SaveChanges();
+                try
+                {
+                    var objEntity = _mapper.Map<Role>(objModel);
+                    _context.Roles.Add(objEntity);
+                    _context.SaveChanges();
+                    return HttpStatusCode.OK;
+                }
+                catch
+                {
+                    return HttpStatusCode.InternalServerError;
+                }
             }
+            return HttpStatusCode.BadRequest;
         }
 
-        public void Update(RoleModel objModel)
+        public HttpStatusCode Update(RoleModel objModel)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -100,11 +113,14 @@ namespace NexusSaaS.Repository
                         _context.Update(objEntity);
                         _context.SaveChanges();
                         transaction.Commit();
+                        return HttpStatusCode.OK;
                     }
+                    return HttpStatusCode.BadRequest;
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
+                    return HttpStatusCode.InternalServerError;
                 }
             }
         }

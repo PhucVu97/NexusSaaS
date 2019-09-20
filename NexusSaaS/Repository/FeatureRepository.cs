@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Hosting;
 using NexusSaaS.Data;
 using NexusSaaS.Entity;
 using NexusSaaS.Models;
 using NexusSaaS.Repository.Interface;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 
 namespace NexusSaaS.Repository
 {
@@ -14,14 +17,16 @@ namespace NexusSaaS.Repository
     {
         private readonly NexusSaaSDbContext _context;
         private readonly IMapper _mapper;
+        private IHostingEnvironment _hosting;
 
-        public FeatureRepository(NexusSaaSDbContext context, IMapper mapper)
+        public FeatureRepository(NexusSaaSDbContext context, IMapper mapper, IHostingEnvironment hosting)
         {
             _context = context;
             _mapper = mapper;
+            _hosting = hosting;
         }
 
-        public void Delete(int id)
+        public HttpStatusCode Delete(int id)
         {
             using(var transaction = _context.Database.BeginTransaction())
             {
@@ -33,16 +38,19 @@ namespace NexusSaaS.Repository
                         _context.Remove(obj);
                         _context.SaveChanges();
                         transaction.Commit();
+                        return HttpStatusCode.OK;
                     }
+                    return HttpStatusCode.NotFound;
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
+                    return HttpStatusCode.InternalServerError;
                 }
             }
         }
 
-        public void Delete(string id)
+        public HttpStatusCode Delete(string id)
         {
             throw new NotImplementedException();
         }
@@ -78,17 +86,35 @@ namespace NexusSaaS.Repository
             return null;
         }
 
-        public void Save(FeatureModel objModel)
+        public HttpStatusCode Save(FeatureModel objModel)
         {
             if (objModel != null)
             {
-                var objEntity = _mapper.Map<FeatureEntity>(objModel);
-                _context.Features.Add(objEntity);
-                _context.SaveChanges();
+                try
+                {
+                    string uploadImgName = "";
+                    if (objModel.Img != null)
+                    {
+                        var uploadFolder = Path.Combine(_hosting.WebRootPath, "images");
+                        uploadImgName = Guid.NewGuid() + "_" + objModel.Img.FileName;
+                        var uploadImgPath = Path.Combine(uploadFolder, uploadImgName);
+                        objModel.Img.CopyTo(new FileStream(uploadImgPath, FileMode.Create));
+                        objModel.ImgUrl = uploadImgName;
+                    }
+                    var objEntity = _mapper.Map<FeatureEntity>(objModel);
+                    _context.Features.Add(objEntity);
+                    _context.SaveChanges();
+                    return HttpStatusCode.OK;
+                }
+                catch
+                {
+                    return HttpStatusCode.InternalServerError;
+                }
             }
+            return HttpStatusCode.BadRequest;
         }
 
-        public void Update(FeatureModel objModel)
+        public HttpStatusCode Update(FeatureModel objModel)
         {
             using(var transaction = _context.Database.BeginTransaction())
             {
@@ -96,15 +122,27 @@ namespace NexusSaaS.Repository
                 {
                     if (objModel != null)
                     {
+                        string uploadImgName = "";
+                        if (objModel.Img != null)
+                        {
+                            var uploadFolder = Path.Combine(_hosting.WebRootPath, "images");
+                            uploadImgName = Guid.NewGuid() + "_" + objModel.Img.FileName;
+                            var uploadImgPath = Path.Combine(uploadFolder, uploadImgName);
+                            objModel.Img.CopyTo(new FileStream(uploadImgPath, FileMode.Create));
+                            objModel.ImgUrl = uploadImgName;
+                        }
                         var objEntity = _mapper.Map<FeatureEntity>(objModel);
                         _context.Update(objEntity);
                         _context.SaveChanges();
                         transaction.Commit();
+                        return HttpStatusCode.OK;
                     }
+                    return HttpStatusCode.BadRequest;
                 }
                 catch(Exception ex)
                 {
                     transaction.Rollback();
+                    return HttpStatusCode.InternalServerError;
                 }
             }
         }

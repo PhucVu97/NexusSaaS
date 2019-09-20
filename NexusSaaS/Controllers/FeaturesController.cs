@@ -16,13 +16,11 @@ namespace NexusSaaS.Controllers
         private IFeatureRepository featureRepository;
         private readonly IMapper _mapper;
 
-        private IHostingEnvironment _hosting;
 
-        public FeaturesController(IFeatureRepository featureRepository, IMapper mapper, IHostingEnvironment hosting)
+        public FeaturesController(IFeatureRepository featureRepository, IMapper mapper)
         {
             this.featureRepository = featureRepository;
             _mapper = mapper;
-            _hosting = hosting;
         }
         #endregion
 
@@ -61,15 +59,6 @@ namespace NexusSaaS.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uploadImgName = "";
-                if (feature.Img != null)
-                {
-                    var uploadFolder = Path.Combine(_hosting.WebRootPath, "images");
-                    uploadImgName = Guid.NewGuid() + "_" + feature.Img.FileName;
-                    var uploadImgPath = Path.Combine(uploadFolder, uploadImgName);
-                    feature.Img.CopyTo(new FileStream(uploadImgPath, FileMode.Create));
-                }
-                feature.ImgUrl = uploadImgName;
                 featureRepository.Save(feature);
             }
             return View(feature);
@@ -104,15 +93,6 @@ namespace NexusSaaS.Controllers
             {
                 try
                 {
-                    string uploadImgName = "";
-                    if (feature.Img != null)
-                    {
-                        var uploadFolder = Path.Combine(_hosting.WebRootPath, "images");
-                        uploadImgName = Guid.NewGuid() + "_" + feature.Img.FileName;
-                        var uploadImgPath = Path.Combine(uploadFolder, uploadImgName);
-                        feature.Img.CopyTo(new FileStream(uploadImgPath, FileMode.Create));
-                    }
-                    feature.ImgUrl = uploadImgName;
                     featureRepository.Update(feature);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -126,7 +106,7 @@ namespace NexusSaaS.Controllers
         // GET: Features/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var feature = _mapper.Map<FeatureModel>(featureRepository.GetById(id));
+            var feature = featureRepository.GetById(id);
             if (feature == null)
             {
                 return NotFound();

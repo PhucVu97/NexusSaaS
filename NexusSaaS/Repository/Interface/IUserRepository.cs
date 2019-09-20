@@ -11,6 +11,7 @@ namespace NexusSaaS.Repository.Interface
     public interface IUserRepository : IGenericRepository<UserEntity, UserModel>
     {
         UserModel GetByEmail(string email);
-        HttpStatusCode Login(UserModel userModel);
+        HttpStatusCode Login(LoginViewModel loginUser);
+        HttpStatusCode Logout();
     }
 }

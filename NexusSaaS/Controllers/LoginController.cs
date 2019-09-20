@@ -18,26 +18,37 @@ namespace NexusSaaS.Controllers
             return PartialView("LoginPartialView");
         }
 
-        public IActionResult Login(UserModel user)
+        public IActionResult Login(LoginViewModel loginUser)
         {
-            if (user != null)
+            if (loginUser != null)
             {
-
-                var statusCode = userRepository.Login(user);
-                if (statusCode == System.Net.HttpStatusCode.Accepted)
+                if (ModelState.IsValid)
                 {
-                    return RedirectToAction("Index", "Home");
-                }
-                else if (statusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    TempData["loginStatus"] = "Wrong password";
-                }
-                else if (statusCode == System.Net.HttpStatusCode.NoContent)
-                {
-                    TempData["loginStatus"] = "Account doesn't exist";
+                    var statusCode = userRepository.Login(loginUser);
+                    switch (statusCode)
+                    {
+                        case System.Net.HttpStatusCode.Accepted :
+                            return RedirectToAction("Index", "Home");
+                        case System.Net.HttpStatusCode.Unauthorized:
+                            ModelState.AddModelError("Wrong Password", "Wrong Password");
+                            break;
+                        case System.Net.HttpStatusCode.NoContent:
+                            ModelState.AddModelError("Not Found", "Account doesn't exist");
+                            break;
+                    }
                 }
             }
-            return NotFound();
+            return BadRequest();
+        }
+
+        public IActionResult Logout()
+        {
+            var statusCode = userRepository.Logout();
+            if(statusCode == System.Net.HttpStatusCode.OK)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return BadRequest();
         }
     }
 }

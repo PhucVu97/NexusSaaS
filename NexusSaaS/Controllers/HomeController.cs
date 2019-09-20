@@ -13,12 +13,10 @@ namespace NexusSaaS.Controllers
     {
         #region DIs
         private IFeatureRepository featureRepository;
-        private readonly IMapper _mapper;
 
-        public HomeController(IFeatureRepository featureRepository, IMapper mapper)
+        public HomeController(IFeatureRepository featureRepository)
         {
             this.featureRepository = featureRepository;
-            _mapper = mapper;
         }
         #endregion
 

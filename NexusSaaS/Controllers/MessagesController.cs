@@ -14,14 +14,10 @@ namespace NexusSaaS.Controllers
     {
         #region DIs
         private IMessageRepository messageRepository;
-        private IUserRepository userRepository;
-        private readonly IMapper _mapper;
 
-        public MessagesController(IMessageRepository messageRepository, IUserRepository userRepository, IMapper mapper)
+        public MessagesController(IMessageRepository messageRepository)
         {
             this.messageRepository = messageRepository;
-            this.userRepository = userRepository;
-            _mapper = mapper;
         }
         #endregion
 
@@ -30,13 +26,7 @@ namespace NexusSaaS.Controllers
         public async Task<IActionResult> Index()
         {
             var messages = messageRepository.List();
-            var messagesList = new List<MessageModel>();
-            foreach (var message in messages)
-            {
-                var model = _mapper.Map<MessageModel>(message);
-                messagesList.Add(model);
-            }
-            return View(messagesList);
+            return View(messages);
         }
 
         // GET: Messages/Details/5
@@ -47,23 +37,12 @@ namespace NexusSaaS.Controllers
             {
                 return NotFound();
             }
-
-            var messageModel = _mapper.Map<MessageModel>(message);
-
-            return View(messageModel);
+            return View(message);
         }
 
         // GET: Messages/Create
         public IActionResult Create()
         {
-            var listUser = userRepository.List();
-            List<UserModel> userModels = new List<UserModel>();
-            foreach(var user in listUser)
-            {
-                var userModel = _mapper.Map<UserModel>(user);
-                userModels.Add(userModel);
-            }
-            ViewData["listUser"] = userModels;
             return View();
         }
 
@@ -76,9 +55,6 @@ namespace NexusSaaS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userModel = userRepository.GetById(message.UserEntityId);
-                var userEntity = _mapper.Map<UserEntity>(userModel);
-                message.UserEntity = userEntity;
                 messageRepository.Save(message);
                 TempData["ProcessMessage"] = "Message sent successful";
             }
@@ -127,7 +103,7 @@ namespace NexusSaaS.Controllers
         public async Task<IActionResult> Delete(int id)
         {
 
-            var message = _mapper.Map<MessageModel>(messageRepository.GetById(id));
+            var message = messageRepository.GetById(id);
             if (message == null)
             {
                 return NotFound();

@@ -30,12 +30,12 @@ namespace NexusSaaS.Repository
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public void Delete(string id)
+        public HttpStatusCode Delete(string id)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(int id)
+        public HttpStatusCode Delete(int id)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -47,11 +47,14 @@ namespace NexusSaaS.Repository
                         _context.Remove(obj);
                         _context.SaveChanges();
                         transaction.Commit();
+                        return HttpStatusCode.OK;
                     }
+                    return HttpStatusCode.NotFound;
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
+                    return HttpStatusCode.InternalServerError;
                 }
             }
         }
@@ -100,10 +103,15 @@ namespace NexusSaaS.Repository
             return null;
         }
 
-        public void Save(UserModel objModel)
+        public HttpStatusCode Save(UserModel objModel)
         {
             if (objModel != null)
             {
+                var existUser = _context.Users.SingleOrDefault(u => u.Email == objModel.Email);
+                if(existUser != null)
+                {
+                    return HttpStatusCode.Conflict;
+                }
                 var objEntity = _mapper.Map<UserEntity>(objModel);
                 objEntity.Password = _stringUltil.EncryptPassword(objEntity.Password, objEntity.Salt);
                 foreach (var roleId in objModel.RoleIds)
@@ -121,10 +129,12 @@ namespace NexusSaaS.Repository
                 }
                 _context.Add(objEntity);
                 _context.SaveChanges();
+                return HttpStatusCode.OK;
             }
+            return HttpStatusCode.BadRequest;
         }
 
-        public void Update(UserModel objModel)
+        public HttpStatusCode Update(UserModel objModel)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -136,28 +146,44 @@ namespace NexusSaaS.Repository
                         _context.Update(objEntity);
                         _context.SaveChanges();
                         transaction.Commit();
+                        return HttpStatusCode.OK;
                     }
+                    return HttpStatusCode.BadRequest;
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
+                    return HttpStatusCode.InternalServerError;
                 }
             }
         }
 
-        public HttpStatusCode Login(UserModel user)
+        public HttpStatusCode Login(LoginViewModel loginUser)
         {
             var existUser = _context.Users
                .Where(a => a.Status != Entity.AccountStatus.Deactive)
                .ProjectTo<UserModel>(_mapper.ConfigurationProvider)
-               .SingleOrDefault(u => u.Email == user.Email);
+               .SingleOrDefault(u => u.Email == loginUser.Email);
 
             if (existUser != null)
             {
-                user.Password = _stringUltil.EncryptPassword(user.Password, existUser.Salt);
-                if (existUser.Password == user.Password && existUser.Status == Models.AccountStatus.Active)
+                loginUser.Password = _stringUltil.EncryptPassword(loginUser.Password, existUser.Salt);
+                if (existUser.Password == loginUser.Password && existUser.Status == Models.AccountStatus.Active)
                 {
                     _session.SetString("loggedInUser", JsonConvert.SerializeObject(_mapper.Map<UserModel>(existUser)));
+                    if(loginUser.RememberMe != null)
+                    {
+                        var credential = _context.Credentials.SingleOrDefault(cr => cr.OwnerId == existUser.UserId);
+                        if (credential == null)
+                        {
+                            credential = new Credential(existUser.UserId);
+                            _context.Credentials.Add(credential);
+                            _context.SaveChanges();
+                            _httpContextAccessor.HttpContext.Response.Cookies.Append("credential", credential.AccessToken);
+                            _httpContextAccessor.HttpContext.Response.Cookies.Append("loggedInUser", JsonConvert.SerializeObject(_mapper.Map<UserModel>(existUser)));
+
+                        }
+                    }
                     return HttpStatusCode.Accepted;
                 }
                 else
@@ -166,6 +192,14 @@ namespace NexusSaaS.Repository
                 }
             }
             return  HttpStatusCode.NoContent;
+        }
+
+        public HttpStatusCode Logout()
+        {
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("creadential");
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("loggedInUser");
+            _httpContextAccessor.HttpContext.Session.Remove("loggedInUser");
+            return HttpStatusCode.OK;
         }
     }
 }

@@ -32,9 +32,16 @@ namespace NexusSaaS.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    userRepository.Save(user);
-                    TempData["registerStatus"] = "Sign up successfull";
-                    return RedirectToAction("Index", "Home");
+                    var statusCode = userRepository.Save(user);
+                    switch (statusCode)
+                    {
+                        case System.Net.HttpStatusCode.OK:
+                            TempData["registerStatus"] = "Sign up successfull";
+                            return RedirectToAction("Index", "Home");
+                        case System.Net.HttpStatusCode.Conflict:
+                            ModelState.AddModelError("Existed", "Email Existed");
+                            break;
+                    }
                 }
             }
             return NotFound();
