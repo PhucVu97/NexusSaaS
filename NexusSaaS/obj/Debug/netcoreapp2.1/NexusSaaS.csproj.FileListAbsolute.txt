@@ -160,3 +160,6 @@ C:\Users\VuPhuc\Documents\Visual Studio 2017\NexusSaaS\NexusSaaS\obj\Debug\netco
 C:\Users\VuPhuc\Documents\Visual Studio 2017\NexusSaaS\NexusSaaS\obj\Debug\netcoreapp2.1\NexusSaaS.dll
 C:\Users\VuPhuc\Documents\Visual Studio 2017\NexusSaaS\NexusSaaS\obj\Debug\netcoreapp2.1\NexusSaaS.pdb
 C:\Users\VuPhuc\Documents\Visual Studio 2017\NexusSaaS\NexusSaaS\obj\Debug\netcoreapp2.1\NexusSaaS.csproj.CopyComplete
+C:\Users\VuPhuc\Documents\Visual Studio 2017\NexusSaaS\NexusSaaS\obj\Debug\netcoreapp2.1\Razor\Views\Users\Delete.g.cshtml.cs
+C:\Users\VuPhuc\Documents\Visual Studio 2017\NexusSaaS\NexusSaaS\obj\Debug\netcoreapp2.1\Razor\Views\Home\ResetPassword.g.cshtml.cs
+C:\Users\VuPhuc\Documents\Visual Studio 2017\NexusSaaS\NexusSaaS\obj\Debug\netcoreapp2.1\Razor\Views\Home\ForgotPassword.g.cshtml.cs

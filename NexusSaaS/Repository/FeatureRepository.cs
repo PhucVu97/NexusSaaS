@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using X.PagedList;
 
 namespace NexusSaaS.Repository
 {
@@ -80,6 +81,29 @@ namespace NexusSaaS.Repository
                 .ToList();
 
             if(list != null || list.Count() > 0)
+            {
+                return list;
+            }
+            return null;
+        }
+
+        public IPagedList<FeatureModel> PagedList(int? page, int? pageSize)
+        {
+            var pageNumber = page.Value;
+            var pageItem = pageSize.Value;
+            if(page == null || page == 0)
+            {
+                pageNumber = 1;
+            }
+            if (pageSize == null || pageSize == 0)
+            {
+                pageItem = 2;
+            }
+            var list = _context.Features
+                .ProjectTo<FeatureModel>(_mapper.ConfigurationProvider)
+                .ToPagedList(pageNumber, pageItem);
+
+            if (list != null || list.Count() > 0)
             {
                 return list;
             }

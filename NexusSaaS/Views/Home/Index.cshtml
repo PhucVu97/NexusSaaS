@@ -76,7 +76,7 @@
                     <li class="nav-item">
                         <a class="nav-link" id="edge-tab" data-toggle="tab" href="#edge" role="tab" aria-controls="edge" aria-selected="false">Unique Features</a>
                     </li>*@
-                @for (var i = 0; i < Model.Count(); i++)
+                @for (var i = 0; i < 4; i++)
                 {
                     if (i == 0)
                     {
@@ -162,7 +162,7 @@
                             </div>
                         </div>
                     </div>*@
-                @for (var i = 0; i < Model.Count(); i++)
+                @for (var i = 0; i < 4; i++)
                 {
                     var imgUrl = "/images/";
                     if (Model[i].ImgUrl == null || Model[i].ImgUrl == "")

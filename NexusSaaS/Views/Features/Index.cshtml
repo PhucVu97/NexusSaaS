@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<NexusSaaS.Models.FeatureModel>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
 
 @{
     Layout = "_Layout";
@@ -51,33 +53,34 @@
                 {
                     imgUrl += item.ImgUrl;
                 }
-            <tr>
-                <td>
-                    <img src="@imgUrl" style="max-width: 200px;"/>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ImgUrl)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        <img src="@imgUrl" style="max-width: 200px;" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Content)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ImgUrl)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
+    @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new { page }))
 </body>
 </html>

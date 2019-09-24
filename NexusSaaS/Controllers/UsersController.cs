@@ -70,7 +70,7 @@ namespace NexusSaaS.Controllers
         }
 
         // GET: Users/Edit/5
-        public IActionResult Edit(string id)
+        public IActionResult Edit(int id)
         {
             var user = userRepository.GetById(id);
             if (user == null)
@@ -102,7 +102,7 @@ namespace NexusSaaS.Controllers
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             var user = userRepository.GetById(id);
             if (user == null)
@@ -115,7 +115,7 @@ namespace NexusSaaS.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             userRepository.Delete(id);
             return RedirectToAction(nameof(Index));

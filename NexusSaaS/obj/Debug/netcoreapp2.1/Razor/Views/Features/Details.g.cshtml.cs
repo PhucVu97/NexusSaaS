@@ -66,7 +66,7 @@ using NexusSaaS.Models;
             WriteLiteral("\r\n<!DOCTYPE html>\r\n\r\n<html>\r\n");
             EndContext();
             BeginContext(101, 102, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "c4ac33f3053b40648e16dc54b0e84287", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "ff39d3e86df84c03a73dd629207977e7", async() => {
                 BeginContext(107, 89, true);
                 WriteLiteral("\r\n    <meta name=\"viewport\" content=\"width=device-width\" />\r\n    <title>Details</title>\r\n");
                 EndContext();
@@ -86,7 +86,7 @@ using NexusSaaS.Models;
             WriteLiteral("\r\n");
             EndContext();
             BeginContext(205, 1076, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "0871cffaaff049f99814083866db4c9a", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "35c390b377d445489e330f47d26c7917", async() => {
                 BeginContext(211, 103, true);
                 WriteLiteral("\r\n\r\n<div>\r\n    <h4>Feature</h4>\r\n    <hr />\r\n    <dl class=\"dl-horizontal\">\r\n        <dt>\r\n            ");
                 EndContext();
@@ -191,7 +191,7 @@ using NexusSaaS.Models;
                 WriteLiteral("\r\n        </dd>\r\n    </dl>\r\n</div>\r\n<div>\r\n    ");
                 EndContext();
                 BeginContext(1164, 54, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e8b0df8608e048788176fa9be3ba5d27", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "a9c65f92351443b380e7e43403de1a40", async() => {
                     BeginContext(1210, 4, true);
                     WriteLiteral("Edit");
                     EndContext();
@@ -226,7 +226,7 @@ using NexusSaaS.Models;
                 WriteLiteral(" |\r\n    ");
                 EndContext();
                 BeginContext(1226, 38, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "6d11de319a7e4f6c8167bc1f957fbb19", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "11653afb85ca4c8fa25b7fca49f35fb6", async() => {
                     BeginContext(1248, 12, true);
                     WriteLiteral("Back to List");
                     EndContext();

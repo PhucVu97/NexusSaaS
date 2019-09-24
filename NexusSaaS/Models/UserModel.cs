@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NexusSaaS.Models
 {
@@ -38,7 +38,9 @@ namespace NexusSaaS.Models
         public List<RoleUser> RoleUsers { get; set; }
 
         [Required(ErrorMessage = "Please select at least role")]
+        [NotMapped]
         public int[] RoleIds { get; set; }
+        [NotMapped]
         public List<string> RoleNames { get; set; }
         public int MessagesCount { get; set; }
         public int RolesCount { get; set; }

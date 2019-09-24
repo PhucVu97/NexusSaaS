@@ -26,9 +26,9 @@ namespace NexusSaaS.Controllers
 
         #region methods CRUD
         // GET: Features
-        public IActionResult Index()
+        public IActionResult Index(int page, int pageSize)
         {
-            var features = featureRepository.List();
+            var features = featureRepository.PagedList(page, pageSize);
             return View(features);
         }
 

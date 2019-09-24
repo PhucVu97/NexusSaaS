@@ -92,7 +92,7 @@
         </script>
     }
 
-    @if(HttpContextAccessor.HttpContext.Session.GetString("loggedInUser") != null)
+    @if (HttpContextAccessor.HttpContext.Session.GetString("loggedInUser") != null)
     {
         var name = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Session.GetString("loggedInUser")).Name;
         var email = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Session.GetString("loggedInUser")).Email;
@@ -104,4 +104,18 @@
             $("#email").prop('disabled', true);
         </script>
     }
+    else if (HttpContextAccessor.HttpContext.Request.Cookies["loggedInUser"] != null)
+    {
+        var name = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Request.Cookies["loggedInUser"]).Name;
+        var email = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Request.Cookies["loggedInUser"]).Email;
+
+        <script>
+            $("#name").val("@name");
+            $("#email").val("@email");
+            $("#name").attr("readonly", true);
+            $("#email").prop('readonly', true);
+        </script>
+    }
+
+
 </section>

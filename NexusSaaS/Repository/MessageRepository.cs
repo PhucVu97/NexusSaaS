@@ -91,16 +91,32 @@ namespace NexusSaaS.Repository
             {
                 try
                 {
+
                     if (_session.GetString("loggedInUser") != null)
                     {
-                        objModel.UserEntity = JsonConvert.DeserializeObject<UserEntity>(_session.GetString("loggedInUser"));
+                        var userId = JsonConvert.DeserializeObject<UserEntity>(_session.GetString("loggedInUser")).UserId;
+                        var user = _context.Users.Find(userId);
+                        if(user != null)
+                        {
+                            objModel.UserEntity = user;
+                        }
                     }
+                    else if(_httpContextAccessor.HttpContext.Request.Cookies["loggedInUser"] != null)
+                    {
+                        var userId = JsonConvert.DeserializeObject<UserEntity>(_httpContextAccessor.HttpContext.Request.Cookies["loggedInUser"]).UserId;
+                        var user = _context.Users.Find(userId);
+                        if (user != null)
+                        {
+                            objModel.UserEntity = user;
+                        }
+                    }
+
                     var objEntity = _mapper.Map<MessageEntity>(objModel);
-                    _context.Messages.Add(objEntity);
+                    _context.Add(objEntity);
                     _context.SaveChanges();
                     return HttpStatusCode.OK;
                 }
-                catch
+                catch(Exception ex)
                 {
                     return HttpStatusCode.InternalServerError;
                 }

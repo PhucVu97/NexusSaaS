@@ -65,8 +65,8 @@
                         <ul class="nav navbar-nav navbar-right" style="display: flex; flex-direction: row;">
                             <li class="nav-item" style="width: 50%; margin: 0"><a class="tickets_btn" id="loadLoginPartialView" style="color: white;">Login</a></li>
                             <li class="nav-item" style="width: 50%; margin: 0"><a class="tickets_btn" id="loadRegisterPartialView" style="color: white;">Sign up</a></li>
-                            <li style="width: 50%;"><a class="tickets_btn" id="loggedInUser" style="color: white; display: none;"></a></li>
-                            <li style="width: 50%;"><a asp-controller="Login" asp-action="Logout" class="tickets_btn" style="color: white; display: none;" id="signOut">Sign out</a></li>
+                            <li style="width: 70%; line-height: 50px"><a id="loggedInUser" style="color: white; display: none; font-size: 16px; "></a></li>
+                            <li style="width: 30%;"><a asp-controller="Login" asp-action="Logout" class="tickets_btn" style="color: white; display: none;" id="signOut">Sign out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -154,6 +154,7 @@
     {
         var loggedInUser = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Session.GetString("loggedInUser"));
         <script>
+            $("#loggedInUser").css("display", "block");
             $(".tickets_btn").css("display", "none");
             $("#signOut").css("display", "block");
             $("#loggedInUser").text("Welcome" + " " + "@loggedInUser.Name");
@@ -164,8 +165,8 @@
         var loggedInUser = JsonConvert.DeserializeObject<UserModel>(HttpContextAccessor.HttpContext.Request.Cookies["loggedInUser"]);
         <script>
             $(".tickets_btn").css("display", "none");
-            $("#signOut").css("display", "block");
             $("#loggedInUser").css("display", "block");
+            $("#signOut").css("display", "block");
             $("#loggedInUser").text("Welcome" + " " + "@loggedInUser.Name");
         </script>
     }

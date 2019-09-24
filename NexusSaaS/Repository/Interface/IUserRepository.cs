@@ -13,5 +13,7 @@ namespace NexusSaaS.Repository.Interface
         UserModel GetByEmail(string email);
         HttpStatusCode Login(LoginViewModel loginUser);
         HttpStatusCode Logout();
+        HttpStatusCode ResetPasswordUrl(string email);
+        HttpStatusCode ResetPassword(ResetPasswordModel resetPassword);
     }
 }

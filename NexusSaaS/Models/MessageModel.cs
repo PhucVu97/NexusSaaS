@@ -25,7 +25,7 @@ namespace NexusSaaS.Models
         #endregion
 
         #region property rieng cua model
-        public string UserEntityId { get; set; }
+        public int UserEntityId { get; set; }
         public string UserEntityName { get; set; }
         public string UserEntityEmail { get; set; }
         #endregion

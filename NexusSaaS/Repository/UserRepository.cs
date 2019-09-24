@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NexusSaaS.Data;
 using NexusSaaS.Entity;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 
 namespace NexusSaaS.Repository
 {
@@ -20,14 +22,16 @@ namespace NexusSaaS.Repository
         private readonly IMapper _mapper;
         private readonly StringUltil _stringUltil;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUrlHelper urlHepler;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
 
-        public UserRepository(NexusSaaSDbContext context, IMapper mapper, StringUltil stringUltil, IHttpContextAccessor httpContextAccessor)
+        public UserRepository(NexusSaaSDbContext context, IMapper mapper, StringUltil stringUltil, IHttpContextAccessor httpContextAccessor, IUrlHelper urlHepler)
         {
             _context = context;
             _mapper = mapper;
             _stringUltil = stringUltil;
             _httpContextAccessor = httpContextAccessor;
+            this.urlHepler = urlHepler;
         }
 
         public HttpStatusCode Delete(string id)
@@ -47,6 +51,11 @@ namespace NexusSaaS.Repository
                         _context.Remove(obj);
                         _context.SaveChanges();
                         transaction.Commit();
+                        foreach (var cookie in _httpContextAccessor.HttpContext.Request.Cookies.Keys)
+                        {
+                            _httpContextAccessor.HttpContext.Response.Cookies.Delete(cookie);
+                        }
+                        _httpContextAccessor.HttpContext.Session.Clear();
                         return HttpStatusCode.OK;
                     }
                     return HttpStatusCode.NotFound;
@@ -170,19 +179,16 @@ namespace NexusSaaS.Repository
                 loginUser.Password = _stringUltil.EncryptPassword(loginUser.Password, existUser.Salt);
                 if (existUser.Password == loginUser.Password && existUser.Status == Models.AccountStatus.Active)
                 {
+                    foreach (var cookie in _httpContextAccessor.HttpContext.Request.Cookies.Keys)
+                    {
+                        _httpContextAccessor.HttpContext.Response.Cookies.Delete(cookie);
+                    }
+                    _httpContextAccessor.HttpContext.Session.Clear();
+
                     _session.SetString("loggedInUser", JsonConvert.SerializeObject(_mapper.Map<UserModel>(existUser)));
                     if(loginUser.RememberMe != null)
                     {
-                        var credential = _context.Credentials.SingleOrDefault(cr => cr.OwnerId == existUser.UserId);
-                        if (credential == null)
-                        {
-                            credential = new Credential(existUser.UserId);
-                            _context.Credentials.Add(credential);
-                            _context.SaveChanges();
-                            _httpContextAccessor.HttpContext.Response.Cookies.Append("credential", credential.AccessToken);
-                            _httpContextAccessor.HttpContext.Response.Cookies.Append("loggedInUser", JsonConvert.SerializeObject(_mapper.Map<UserModel>(existUser)));
-
-                        }
+                        _httpContextAccessor.HttpContext.Response.Cookies.Append("loggedInUser", JsonConvert.SerializeObject(_mapper.Map<UserModel>(existUser)));
                     }
                     return HttpStatusCode.Accepted;
                 }
@@ -196,10 +202,77 @@ namespace NexusSaaS.Repository
 
         public HttpStatusCode Logout()
         {
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete("creadential");
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete("loggedInUser");
-            _httpContextAccessor.HttpContext.Session.Remove("loggedInUser");
+            foreach (var cookie in _httpContextAccessor.HttpContext.Request.Cookies.Keys)
+            {
+                _httpContextAccessor.HttpContext.Response.Cookies.Delete(cookie);
+            }
+            _httpContextAccessor.HttpContext.Session.Clear();
             return HttpStatusCode.OK;
+        }
+
+        public HttpStatusCode ResetPasswordUrl(string email)
+        {
+            var user = _context.Users.SingleOrDefault(u => u.Email == email);
+            if(user != null)
+            {
+                try
+                {
+                    var credential = new Credential(user.UserId);
+                    _context.Add(credential);
+                    _context.SaveChanges();
+                    string scheme = _httpContextAccessor.HttpContext.Request.Scheme;
+                    var resetUrl = urlHepler.Action(action: "ResetPassword", controller: "Login", values: new { credential.AccessToken }, protocol: scheme);
+                    SendEmail("Reset Password", resetUrl, user.Email, user.Name);
+                    return HttpStatusCode.OK;
+                }
+                catch
+                {
+                    return HttpStatusCode.InternalServerError;
+                }
+            }
+            return HttpStatusCode.NotFound;
+        }
+
+        public HttpStatusCode ResetPassword(ResetPasswordModel resetPassword)
+        {
+            if(resetPassword != null)
+            {
+                var credential = _context.Credentials.SingleOrDefault(c => c.AccessToken == resetPassword.Token);
+                if (credential.IsValid())
+                {
+                    var user = GetById(credential.OwnerId);
+                    user.Password = _stringUltil.EncryptPassword(resetPassword.Password, user.Salt);
+                    return HttpStatusCode.OK;
+                }
+                return HttpStatusCode.BadRequest;
+            }
+            return HttpStatusCode.BadRequest;
+        }
+
+        public void SendEmail(string subject, string body, string receiverEmail, string receiverName)
+        {
+            var fromAddress = new MailAddress("from@gmail.com", "From FPT APTECH");
+            var toAddress = new MailAddress(receiverEmail, "To " + receiverName);
+            const string fromPassword = "fromPassword";
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential("phucvtd00502@fpt.edu.vn", "meomeo@#$")
+            };
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            })
+            {
+                smtp.Send(message);
+            }
         }
     }
 }

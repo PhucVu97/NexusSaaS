@@ -13,21 +13,19 @@ namespace NexusSaaS.Entity
 
         }
 
-        public Credential(long OwnerId)
+        public Credential(int OwnerId)
         {
             this.AccessToken = Guid.NewGuid().ToString();
-            this.RefreshToken = Guid.NewGuid().ToString(); ;
             this.OwnerId = OwnerId;
             this.CreatedAt = DateTime.Today;
             this.UpdatedAt = DateTime.Today;
             this.Status = CredentialStatus.Active;
-            this.ExpiredAt = DateTime.Now.AddDays(30);
+            this.ExpiredAt = DateTime.Now.AddMinutes(15);
         }
 
         [Key]
         public string AccessToken { get; set; }
-        public long OwnerId { get; set; }
-        public string RefreshToken { get; set; }
+        public int OwnerId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime ExpiredAt { get; set; }
