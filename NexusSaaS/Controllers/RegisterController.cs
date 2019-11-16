@@ -24,9 +24,7 @@ namespace NexusSaaS.Controllers
             return PartialView("RegisterPartialView");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(UserModel user)
+        public IActionResult Create([FromBody] UserModel user)
         {
             if (user != null)
             {
@@ -37,12 +35,13 @@ namespace NexusSaaS.Controllers
                     {
                         case System.Net.HttpStatusCode.OK:
                             TempData["registerStatus"] = "Sign up successfull";
-                            return RedirectToAction("Index", "Home");
+                            return Ok();
                         case System.Net.HttpStatusCode.Conflict:
-                            ModelState.AddModelError("Existed", "Email Existed");
-                            break;
+                            ModelState.AddModelError("Email", "Email Existed");
+                            return new JsonResult(ModelState);
                     }
                 }
+                return new JsonResult(ModelState);
             }
             return NotFound();
         }

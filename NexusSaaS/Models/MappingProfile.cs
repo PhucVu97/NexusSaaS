@@ -19,6 +19,11 @@ namespace NexusSaaS.Models
             CreateMap<Role, RoleModel>()
                 .ForMember(rm => rm.Status, opt => opt.MapFrom(r => (RoleStatus)r.Status));
             CreateMap<RoleUser, RoleUserModel>();
+            CreateMap<Category, CategoryModel>()
+                .ForMember(c => c.PostCount, opt => opt.MapFrom(c => c.PostCategories.Count()));
+            CreateMap<PostEntity, PostViewModel>()
+                .ForMember(p => p.CommentCount, opt => opt.MapFrom(p => p.Comments.Count()))
+                .ForMember(p => p.CategorieName, opt => opt.MapFrom(p => p.PostCategories.Select(pc => pc.Category.Name).ToList()));
 
             CreateMap<FeatureModel, FeatureEntity>();
             CreateMap<MessageModel, MessageEntity>();
@@ -27,7 +32,8 @@ namespace NexusSaaS.Models
             CreateMap<RoleModel, Role>()
                 .ForMember(r => r.Status, opt => opt.MapFrom(rm => rm.Status));
             CreateMap<RoleUserModel, RoleUser>();
-
+            CreateMap<CategoryModel, Category>();
+            CreateMap<PostViewModel, PostEntity>();
         }
     }
 }

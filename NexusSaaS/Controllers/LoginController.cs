@@ -17,7 +17,7 @@ namespace NexusSaaS.Controllers
             return PartialView("LoginPartialView");
         }
 
-        public IActionResult Login(LoginViewModel loginUser)
+        public IActionResult Login([FromBody] LoginViewModel loginUser)
         {
             if (loginUser != null)
             {
@@ -27,15 +27,16 @@ namespace NexusSaaS.Controllers
                     switch (statusCode)
                     {
                         case System.Net.HttpStatusCode.Accepted :
-                            return RedirectToAction("Index", "Home");
+                            return Ok();
                         case System.Net.HttpStatusCode.Unauthorized:
-                            ModelState.AddModelError("Wrong Password", "Wrong Password");
-                            break;
+                            ModelState.AddModelError("Password", "Wrong Password");
+                            return new JsonResult(ModelState);
                         case System.Net.HttpStatusCode.NoContent:
-                            ModelState.AddModelError("Not Found", "Account doesn't exist");
-                            break;
+                            ModelState.AddModelError("Email", "Account doesn't exist");
+                            return new JsonResult(ModelState);
                     }
                 }
+                return new JsonResult(ModelState);
             }
             return BadRequest();
         }

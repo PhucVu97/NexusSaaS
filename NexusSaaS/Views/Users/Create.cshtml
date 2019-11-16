@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var listRoles = ViewData["listRoles"] as List<RoleModel>;
 }
 
 <h2>Create</h2>
@@ -27,6 +28,18 @@
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Roles</label>
+                @foreach (var r in listRoles)
+                {
+                    <input type="checkbox" asp-for="RoleIds" class="form-control" value="@r.RoleId"/> @r.Name
+                }
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

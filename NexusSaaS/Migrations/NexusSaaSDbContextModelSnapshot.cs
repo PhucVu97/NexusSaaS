@@ -15,9 +15,45 @@ namespace NexusSaaS.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("NexusSaaS.Entity.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("NexusSaaS.Entity.Comment", b =>
+                {
+                    b.Property<int>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int?>("PostId");
+
+                    b.Property<int?>("UserId");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
 
             modelBuilder.Entity("NexusSaaS.Entity.Credential", b =>
                 {
@@ -83,6 +119,44 @@ namespace NexusSaaS.Migrations
                     b.ToTable("message");
                 });
 
+            modelBuilder.Entity("NexusSaaS.Entity.PostCategory", b =>
+                {
+                    b.Property<int>("PostId");
+
+                    b.Property<int>("CategoryId");
+
+                    b.HasKey("PostId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("PostCategories");
+                });
+
+            modelBuilder.Entity("NexusSaaS.Entity.PostEntity", b =>
+                {
+                    b.Property<int>("PostId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Title");
+
+                    b.Property<int?>("UserId");
+
+                    b.Property<double>("Views");
+
+                    b.HasKey("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PostEntities");
+                });
+
             modelBuilder.Entity("NexusSaaS.Entity.Role", b =>
                 {
                     b.Property<int>("RoleId")
@@ -142,11 +216,42 @@ namespace NexusSaaS.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("NexusSaaS.Entity.Comment", b =>
+                {
+                    b.HasOne("NexusSaaS.Entity.PostEntity", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId");
+
+                    b.HasOne("NexusSaaS.Entity.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("NexusSaaS.Entity.MessageEntity", b =>
                 {
                     b.HasOne("NexusSaaS.Entity.UserEntity", "UserEntity")
                         .WithMany("MessageEntitys")
                         .HasForeignKey("UserEntityUserId");
+                });
+
+            modelBuilder.Entity("NexusSaaS.Entity.PostCategory", b =>
+                {
+                    b.HasOne("NexusSaaS.Entity.Category", "Category")
+                        .WithMany("PostCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("NexusSaaS.Entity.PostEntity", "PostEntity")
+                        .WithMany("PostCategories")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("NexusSaaS.Entity.PostEntity", b =>
+                {
+                    b.HasOne("NexusSaaS.Entity.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("NexusSaaS.Entity.RoleUser", b =>

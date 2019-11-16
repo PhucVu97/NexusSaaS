@@ -2,18 +2,19 @@
 
 <div id="id01" class="modal">
 
-    <form class="modal-content animate" asp-controller="Login" asp-action="Login" style="width: 30%;">
+    <form class="modal-content animate" id="loginForm" asp-controller="Login" asp-action="Login" style="width: 30%;">
 
         <div class="container">
             <label asp-for="Email"><b>Username</b></label>
             <input type="text" placeholder="Enter Email" asp-for="Email" required>
-            <span asp-validation-for="Email" class="text-danger"></span>
+            <span asp-validation-for="Email" id="email_validate" class="text-danger"></span>
+            <br />
 
             <label asp-for="Password"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" asp-for="Password" required>
-            <span asp-validation-for="Password" class="text-danger"></span>
+            <span asp-validation-for="Password" id="password_validate" class="text-danger"></span>
 
-            <button type="submit">Login</button>
+            <button type="button" class="btn-submit">Login</button>
             <label>
                 <input type="checkbox" name="RememberMe" value="1"> Remember me
             </label>
@@ -25,3 +26,31 @@
         </div>
     </form>
 </div>
+<script>
+    $(".btn-submit").click(function () {
+        var formData = {
+            "Email": $("#loginForm").find('input[name="Email"]').val(),
+            "Password": $("#loginForm").find('input[name="Password"]').val()
+        };
+        $.ajax({
+            type: 'POST',
+            accepts: 'application/json',
+            contentType: 'application/json',
+            url: 'https://localhost:44349/Login/Login',
+            data: JSON.stringify(formData),
+            success: function (result, textStatus, jqXHR) {
+                if (jqXHR.status == 200) {
+                    location.reload();
+                }
+                if (result.Password != null) {
+                    $("#password_validate").text(result.Password.errors[0].errorMessage);
+                }
+                if (result.Email != null) {
+                    $("#email_validate").text(result.Email.errors[0].errorMessage);
+                }       
+            },
+            error: function (jqXHR) {
+            }
+        });
+    });
+</script>

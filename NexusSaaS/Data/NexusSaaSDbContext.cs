@@ -27,15 +27,8 @@ namespace NexusSaaS.Data
             modelBuilder.Entity<RoleUser>()
                 .HasKey(ru => new { ru.UserId, ru.RoleId });
 
-            //modelBuilder.Entity<UserEntity>()
-            //                .HasMany(u => u.RoleUsers)
-            //                .WithOne(u => u.UserEntity).IsRequired()
-            //                .HasForeignKey(u => u.UserEntity);
-
-            //modelBuilder.Entity<Role>()
-            //            .HasMany(r => r.RoleUsers)
-            //            .WithOne(r => r.Role).IsRequired()
-            //            .HasForeignKey(r => r.RoleId);
+            modelBuilder.Entity<PostCategory>()
+                .HasKey(pc => new { pc.PostId, pc.CategoryId });
         }
 
 
@@ -46,6 +39,10 @@ namespace NexusSaaS.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<Credential> Credentials { get; set; }
         public DbSet<RoleUser> RoleUsers { get; set; }
+        public DbSet<PostEntity> PostEntities { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<PostCategory> PostCategories { get; set; }
         #endregion
     }
 }

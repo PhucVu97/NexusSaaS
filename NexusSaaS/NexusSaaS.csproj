@@ -5,8 +5,105 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190927022123_NexusSaaSMigration_5.cs" />
+    <Compile Remove="Migrations\20190927022123_NexusSaaSMigration_5.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\js\site.js" />
     <None Include="wwwroot\js\site.min.js" />
+    <None Include="wwwroot\simditor-2.3.23\.gitignore" />
+    <None Include="wwwroot\simditor-2.3.23\.ruby-version" />
+    <None Include="wwwroot\simditor-2.3.23\Gemfile" />
+    <None Include="wwwroot\simditor-2.3.23\Gruntfile.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\jekyll.yml" />
+    <None Include="wwwroot\simditor-2.3.23\lib\simditor.js" />
+    <None Include="wwwroot\simditor-2.3.23\LICENSE" />
+    <None Include="wwwroot\simditor-2.3.23\README.md" />
+    <None Include="wwwroot\simditor-2.3.23\server.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\dompurify.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\hotkeys.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\jquery.min.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\mobilecheck.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\module.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\page-demo.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\page-doc.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\page-download.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\page-form.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\simditor.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\scripts\uploader.js" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\_coffee\page-demo.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\_coffee\page-download.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\_coffee\page-form.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\_sass\app.scss" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\_sass\function.scss" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\_sass\highlight.scss" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\_sass\mobile.scss" />
+    <None Include="wwwroot\simditor-2.3.23\site\assets\_sass\reset.scss" />
+    <None Include="wwwroot\simditor-2.3.23\site\CNAME" />
+    <None Include="wwwroot\simditor-2.3.23\site\docs\doc-config.md" />
+    <None Include="wwwroot\simditor-2.3.23\site\docs\doc-dev-env.md" />
+    <None Include="wwwroot\simditor-2.3.23\site\docs\doc-event.md" />
+    <None Include="wwwroot\simditor-2.3.23\site\docs\doc-method.md" />
+    <None Include="wwwroot\simditor-2.3.23\site\docs\doc-usage.md" />
+    <None Include="wwwroot\simditor-2.3.23\site\_data\button.yml" />
+    <None Include="wwwroot\simditor-2.3.23\site\_data\configs.yml" />
+    <None Include="wwwroot\simditor-2.3.23\site\_data\events.yml" />
+    <None Include="wwwroot\simditor-2.3.23\site\_data\methods.yml" />
+    <None Include="wwwroot\simditor-2.3.23\spec\buttons\alignment-spec.js" />
+    <None Include="wwwroot\simditor-2.3.23\spec\buttons\bold-spec.js" />
+    <None Include="wwwroot\simditor-2.3.23\spec\buttons\code-spec.js" />
+    <None Include="wwwroot\simditor-2.3.23\spec\buttons\font-scale-spec.js" />
+    <None Include="wwwroot\simditor-2.3.23\spec\buttons\table-spec.js" />
+    <None Include="wwwroot\simditor-2.3.23\spec\buttons\title-spec.js" />
+    <None Include="wwwroot\simditor-2.3.23\spec\core-spec.js" />
+    <None Include="wwwroot\simditor-2.3.23\spec\formatter-spec.js" />
+    <None Include="wwwroot\simditor-2.3.23\spec\indentation-spec.js" />
+    <None Include="wwwroot\simditor-2.3.23\spec\src\buttons\alignment-spec.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\spec\src\buttons\bold-spec.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\spec\src\buttons\code-spec.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\spec\src\buttons\font-scale-spec.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\spec\src\buttons\table-spec.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\spec\src\buttons\title-spec.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\spec\src\core-spec.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\spec\src\formatter-spec.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\spec\src\indentation-spec.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\spec\src\util.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\spec\util.js" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\alignment.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\blockquote.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\bold.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\button.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\code.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\color.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\font-scale.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\hr.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\image.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\indent.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\italic.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\link.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\list.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\outdent.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\popover.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\strikethrough.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\table.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\title.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\buttons\underline.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\clipboard.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\core.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\formatter.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\i18n.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\indentation.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\inputManager.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\keystroke.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\selection.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\toolbar.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\undoManager.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\src\util.coffee" />
+    <None Include="wwwroot\simditor-2.3.23\styles\editor.scss" />
+    <None Include="wwwroot\simditor-2.3.23\styles\fonticon.scss" />
+    <None Include="wwwroot\simditor-2.3.23\styles\simditor.scss" />
+    <None Include="wwwroot\simditor-2.3.23\umd.hbs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,7 +113,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="7.6.0" />
   </ItemGroup>

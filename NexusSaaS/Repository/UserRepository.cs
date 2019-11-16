@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Mail;
 
 namespace NexusSaaS.Repository
 {
@@ -21,17 +20,19 @@ namespace NexusSaaS.Repository
         private readonly NexusSaaSDbContext _context;
         private readonly IMapper _mapper;
         private readonly StringUltil _stringUltil;
+        private readonly MailUltil _mailUltil;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUrlHelper urlHepler;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
 
-        public UserRepository(NexusSaaSDbContext context, IMapper mapper, StringUltil stringUltil, IHttpContextAccessor httpContextAccessor, IUrlHelper urlHepler)
+        public UserRepository(NexusSaaSDbContext context, IMapper mapper, StringUltil stringUltil, IHttpContextAccessor httpContextAccessor, IUrlHelper urlHepler, MailUltil mailUltil)
         {
             _context = context;
             _mapper = mapper;
             _stringUltil = stringUltil;
             _httpContextAccessor = httpContextAccessor;
             this.urlHepler = urlHepler;
+            _mailUltil = mailUltil;
         }
 
         public HttpStatusCode Delete(string id)
@@ -222,7 +223,7 @@ namespace NexusSaaS.Repository
                     _context.SaveChanges();
                     string scheme = _httpContextAccessor.HttpContext.Request.Scheme;
                     var resetUrl = urlHepler.Action(action: "ResetPassword", controller: "Login", values: new { credential.AccessToken }, protocol: scheme);
-                    SendEmail("Reset Password", resetUrl, user.Email, user.Name);
+                    _mailUltil.SendEmail("Reset Password", resetUrl, user.Email, user.Name);
                     return HttpStatusCode.OK;
                 }
                 catch
@@ -247,32 +248,6 @@ namespace NexusSaaS.Repository
                 return HttpStatusCode.BadRequest;
             }
             return HttpStatusCode.BadRequest;
-        }
-
-        public void SendEmail(string subject, string body, string receiverEmail, string receiverName)
-        {
-            var fromAddress = new MailAddress("from@gmail.com", "From FPT APTECH");
-            var toAddress = new MailAddress(receiverEmail, "To " + receiverName);
-            const string fromPassword = "fromPassword";
-
-            var smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("phucvtd00502@fpt.edu.vn", "meomeo@#$")
-            };
-            using (var message = new MailMessage(fromAddress, toAddress)
-            {
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = true
-            })
-            {
-                smtp.Send(message);
-            }
         }
     }
 }

@@ -1,0 +1,93 @@
+﻿@model NexusSaaS.Models.PostViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var listCategories = ViewData["listCategories"] as List<CategoryModel>;
+}
+
+@section Head{
+    <link rel="stylesheet" type="text/css" href="~/simditor-2.3.23/styles/simditor.css" />
+    <script type="text/javascript" src="~/simditor-2.3.23/site/assets/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="~/simditor-2.3.23/site/assets/scripts/module.js"></script>
+    <script type="text/javascript" src="~/simditor-2.3.23/site/assets/scripts/hotkeys.js"></script>
+    <script type="text/javascript" src="~/simditor-2.3.23/site/assets/scripts/uploader.js"></script>
+    <script type="text/javascript" src="~/simditor-2.3.23/lib/simditor.js"></script>
+}
+
+<h2>Create</h2>
+
+<h4>PostEntity</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea asp-for="Content" class="form-control" id="editor" autofocus></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Category</label>
+                <select asp-for="CategorieIds" multiple class="form-control">
+                    @foreach(var category in listCategories)
+                    {
+                        <option value="@category.CategoryId">@category.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function generateTextEditor() {
+            var editor = new Simditor({
+                textarea: $('#editor'),
+                toolbar:
+                    [
+                        'title',
+                        'bold',
+                        'italic',
+                        'underline',
+                        'strikethrough',
+                        'fontScale',
+                        'color',
+                        'ol',
+                        'ul',
+                        'blockquote',
+                        'code',
+                        'table',
+                        'link',
+                        'image',
+                        'hr',
+                        'indent',
+                        'outdent',
+                        'alignment',
+                    ]
+            });
+        }
+
+        generateTextEditor();
+    </script>
+}
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
